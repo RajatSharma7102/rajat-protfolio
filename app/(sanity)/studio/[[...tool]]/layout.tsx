@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const metadata: Metadata= {
+export const metadata: Metadata = {
   title: "Rajat's Portfolio",
   description: "Sanity Rajat's Portfolio",
 };
@@ -8,11 +8,9 @@ export const metadata: Metadata= {
 function layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-        <body>
-            {children}
-        </body>
+      <body>{children}</body>
     </html>
-  )
+  );
 }
 
-export default layout
+export default layout;
