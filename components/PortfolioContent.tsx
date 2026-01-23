@@ -1,5 +1,7 @@
 import React from "react";
 import { HeroSection } from "./sections/HeroSection";
+import { AboutSection } from "./sections/AboutSection";
+
 
 function PortfolioContent() {
   return (
