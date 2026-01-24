@@ -1,6 +1,8 @@
 import React from "react";
 import { HeroSection } from "./sections/HeroSection";
 import { AboutSection } from "./sections/AboutSection";
+import { TestimonialsSection } from "./sections/TestimonialsSection";
+import { SkillsSection } from "./sections/SkillsSection";
 
 
 function PortfolioContent() {
@@ -8,9 +10,9 @@ function PortfolioContent() {
     <>
       <HeroSection />
       <AboutSection />
-      {/* <TestimonialsSection />
+      <TestimonialsSection />
       <SkillsSection />
-      <ExperienceSection />
+      {/* <ExperienceSection />
       <EducationSection />
       <ProjectsSection />
       <CertificationsSection />
