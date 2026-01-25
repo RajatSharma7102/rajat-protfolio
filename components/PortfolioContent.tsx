@@ -3,6 +3,7 @@ import { HeroSection } from "./sections/HeroSection";
 import { AboutSection } from "./sections/AboutSection";
 import { TestimonialsSection } from "./sections/TestimonialsSection";
 import { SkillsSection } from "./sections/SkillsSection";
+import { ExperienceSection } from "./sections/ExperienceSection";
 
 
 function PortfolioContent() {
@@ -12,8 +13,8 @@ function PortfolioContent() {
       <AboutSection />
       <TestimonialsSection />
       <SkillsSection />
-      {/* <ExperienceSection />
-      <EducationSection />
+      <ExperienceSection />
+      {/* <EducationSection />
       <ProjectsSection />
       <CertificationsSection />
       <AchievementsSection />
