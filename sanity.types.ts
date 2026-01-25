@@ -991,6 +991,36 @@ export type ABOUT_QUERYResult = {
   location: string | null;
 } | null;
 
+// Source: ./components/sections/CertificationsSection.tsx
+// Variable: CERTIFICATIONS_QUERY
+// Query: *[_type == "certification"] | order(issueDate desc){  name,  issuer,  issueDate,  expiryDate,  credentialId,  credentialUrl,  logo,  description,  skills[]->{name, category},  order}
+export type CERTIFICATIONS_QUERYResult = Array<{
+  name: string | null;
+  issuer: string | null;
+  issueDate: string | null;
+  expiryDate: string | null;
+  credentialId: string | null;
+  credentialUrl: string | null;
+  logo: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  } | null;
+  description: string | null;
+  skills: Array<{
+    name: string | null;
+    category: "ai-ml" | "backend" | "cloud" | "database" | "design" | "devops" | "frontend" | "mobile" | "other" | "soft-skills" | "testing" | "tools" | null;
+  }> | null;
+  order: number | null;
+}>;
+
 // Source: ./components/sections/EducationSection.tsx
 // Variable: EDUCATION_QUERY
 // Query: *[_type == "education"] | order(endDate desc, startDate desc){  institution,  degree,  fieldOfStudy,  startDate,  endDate,  current,  gpa,  description,  achievements,  logo,  website,  order}
@@ -1258,6 +1288,7 @@ declare module "@sanity/client" {
   interface SanityQueries {
     "*[_id == \"singleton-profile\"][0]{\n    _id,\n    _type,\n    _createdAt,\n    _updatedAt,\n    _rev,\n    firstName,\n    lastName,\n    headline,\n    shortBio,\n    email,\n    phone,\n    location,\n    availability,\n    socialLinks,\n    yearsOfExperience,\n    profileImage\n  }": CHAT_PROFILE_QUERYResult;
     "*[_id == \"singleton-profile\"][0]{\n  firstName,\n  lastName,\n  fullBio,\n  yearsOfExperience,\n  stats,\n  email,\n  phone,\n  location\n}": ABOUT_QUERYResult;
+    "*[_type == \"certification\"] | order(issueDate desc){\n  name,\n  issuer,\n  issueDate,\n  expiryDate,\n  credentialId,\n  credentialUrl,\n  logo,\n  description,\n  skills[]->{name, category},\n  order\n}": CERTIFICATIONS_QUERYResult;
     "*[_type == \"education\"] | order(endDate desc, startDate desc){\n  institution,\n  degree,\n  fieldOfStudy,\n  startDate,\n  endDate,\n  current,\n  gpa,\n  description,\n  achievements,\n  logo,\n  website,\n  order\n}": EDUCATION_QUERYResult;
     "*[_type == \"experience\"] | order(startDate desc){\n  company,\n  position,\n  employmentType,\n  location,\n  startDate,\n  endDate,\n  current,\n  description,\n  responsibilities,\n  achievements,\n  technologies[]->{name, category},\n  companyLogo,\n  companyWebsite\n}": EXPERIENCE_QUERYResult;
     "*[_id == \"singleton-profile\"][0]{\n  firstName,\n  lastName,\n  headline,\n  headlineStaticText,\n  headlineAnimatedWords,\n  headlineAnimationDuration,\n  shortBio,\n  email,\n  phone,\n  location,\n  availability,\n  socialLinks,\n  yearsOfExperience,\n  profileImage\n}": HERO_QUERYResult;
