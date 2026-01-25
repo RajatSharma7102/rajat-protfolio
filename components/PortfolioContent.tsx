@@ -5,6 +5,7 @@ import { TestimonialsSection } from "./sections/TestimonialsSection";
 import { SkillsSection } from "./sections/SkillsSection";
 import { ExperienceSection } from "./sections/ExperienceSection";
 import { EducationSection } from "./sections/EducationSection";
+import { ProjectsSection } from "./sections/ProjectsSection";
 
 
 function PortfolioContent() {
@@ -16,8 +17,8 @@ function PortfolioContent() {
       <SkillsSection />
       <ExperienceSection />
       <EducationSection />
-      {/* <ProjectsSection />
-      <CertificationsSection />
+      <ProjectsSection />
+      {/* <CertificationsSection />
       <AchievementsSection />
       <ServicesSection />
       <BlogSection />
