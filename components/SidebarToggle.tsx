@@ -46,7 +46,7 @@ function SidebarToggle() {
           type="button"
           onClick={toggleSidebar}
           className={buttonStyles}
-          aria-label="Chat with AI Twin"
+          aria-label="Chat with Me"
         >
           <MessageSquare className="h-7 w-7 text-white transition-transform group-hover:scale-110" />
         </button>
