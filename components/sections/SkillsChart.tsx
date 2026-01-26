@@ -1,5 +1,6 @@
 "use client";
 
+import { stegaClean } from "next-sanity";
 import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
 import {
   type ChartConfig,
@@ -30,7 +31,8 @@ export function SkillsChart({ skills }: SkillsChartProps) {
   const groupedSkills = new Map<string, Skill[]>();
 
   for (const skill of skills) {
-    const category = skill.category || "other";
+    // Use stegaClean to remove invisible encoding characters from category
+    const category = stegaClean(skill.category || "other");
     const existing = groupedSkills.get(category) || [];
     groupedSkills.set(category, [...existing, skill]);
   }
