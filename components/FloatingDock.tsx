@@ -17,5 +17,13 @@ export async function FloatingDock() {
     return null;
   }
 
-  return <FloatingDockClient navItems={navItems} />;
+  // Filter out Achievements, Blogs, and Twitter navigation items
+  const filteredNavItems = navItems.filter(
+    (item) =>
+      item.href !== "#achievements" &&
+      item.href !== "#blog" &&
+      item.title !== "Twitter",
+  );
+
+  return <FloatingDockClient navItems={filteredNavItems} />;
 }

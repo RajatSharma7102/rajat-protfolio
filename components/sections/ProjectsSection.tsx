@@ -24,7 +24,7 @@ export async function ProjectsSection() {
   }
 
   return (
-    <section id="projects" className="py-20 px-6 bg-muted/30">
+    <section id="projects" className="py-20 px-6 bg-gray-100 dark:bg-black">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
