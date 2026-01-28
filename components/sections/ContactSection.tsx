@@ -145,7 +145,7 @@ export async function ContactSection() {
                         LinkedIn
                       </Link>
                     )}
-                    {profile.socialLinks.twitter && (
+                    {/* {profile.socialLinks.twitter && (
                       <Link
                         href={profile.socialLinks.twitter}
                         target="_blank"
@@ -154,7 +154,7 @@ export async function ContactSection() {
                       >
                         Twitter
                       </Link>
-                    )}
+                    )} */}
                     {profile.socialLinks.website && (
                       <Link
                         href={profile.socialLinks.website}
@@ -165,7 +165,7 @@ export async function ContactSection() {
                         Website
                       </Link>
                     )}
-                    {profile.socialLinks.medium && (
+                    {/* {profile.socialLinks.medium && (
                       <Link
                         href={profile.socialLinks.medium}
                         target="_blank"
@@ -174,8 +174,8 @@ export async function ContactSection() {
                       >
                         Medium
                       </Link>
-                    )}
-                    {profile.socialLinks.devto && (
+                    )} */}
+                    {/* {profile.socialLinks.devto && (
                       <Link
                         href={profile.socialLinks.devto}
                         target="_blank"
@@ -184,8 +184,8 @@ export async function ContactSection() {
                       >
                         Dev.to
                       </Link>
-                    )}
-                    {profile.socialLinks.youtube && (
+                    )} */}
+                    {/* {profile.socialLinks.youtube && (
                       <Link
                         href={profile.socialLinks.youtube}
                         target="_blank"
@@ -194,7 +194,7 @@ export async function ContactSection() {
                       >
                         YouTube
                       </Link>
-                    )}
+                    )} */}
                   </div>
                 </div>
               )}
