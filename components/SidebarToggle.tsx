@@ -25,7 +25,7 @@ function SidebarToggle() {
     hover:shadow-[0_0_60px_rgba(168,85,247,0.6)] 
     transition-all duration-500 
     hover:scale-110 hover:rotate-12 
-    flex items-center justify-center`;
+    flex items-center justify-center cursor-pointer`;
 
   // Show button immediately, but non-interactive during hydration
   const renderButton = () => {
