@@ -1,6 +1,6 @@
 "use client";
 import type React from "react";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export const BackgroundRippleEffect = ({
@@ -17,7 +17,25 @@ export const BackgroundRippleEffect = ({
     col: number;
   } | null>(null);
   const [rippleKey, setRippleKey] = useState(0);
+  const [mounted, setMounted] = useState(false);
   const ref = useRef<any>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Return a simple background during SSR to prevent hydration issues
+  if (!mounted) {
+    return (
+      <div
+        className={cn(
+          "absolute inset-0 h-full w-full",
+          "[--cell-border-color:var(--color-neutral-300)] [--cell-fill-color:var(--color-neutral-100)]",
+          "dark:[--cell-border-color:var(--color-neutral-700)] dark:[--cell-fill-color:var(--color-neutral-900)]",
+        )}
+      />
+    );
+  }
 
   return (
     <div

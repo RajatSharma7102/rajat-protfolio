@@ -1,6 +1,7 @@
 "use client";
 
 import { stegaClean } from "next-sanity";
+import { useEffect, useState } from "react";
 import { Bar, BarChart, LabelList, XAxis, YAxis } from "recharts";
 import {
   type ChartConfig,
@@ -22,7 +23,40 @@ interface SkillsChartProps {
   skills: Skill[];
 }
 
+// Loading skeleton for skills chart
+function SkillsChartSkeleton({ groupCount }: { groupCount: number }) {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {Array.from({ length: Math.min(groupCount, 4) }).map((_, i) => (
+        <div key={i} className="rounded-xl border bg-card overflow-hidden">
+          <div className="border-b bg-muted/50 px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="h-6 w-32 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
+              <div className="h-6 w-8 bg-neutral-200 dark:bg-neutral-700 rounded-full animate-pulse" />
+            </div>
+          </div>
+          <div className="p-4 space-y-3">
+            {[1, 2, 3].map((j) => (
+              <div key={j} className="flex items-center gap-3">
+                <div className="h-4 w-20 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
+                <div className="h-4 flex-1 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
+                <div className="h-4 w-8 bg-neutral-200 dark:bg-neutral-700 rounded animate-pulse" />
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function SkillsChart({ skills }: SkillsChartProps) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   if (!skills || skills.length === 0) {
     return null;
   }
@@ -35,6 +69,11 @@ export function SkillsChart({ skills }: SkillsChartProps) {
     const category = stegaClean(skill.category || "other");
     const existing = groupedSkills.get(category) || [];
     groupedSkills.set(category, [...existing, skill]);
+  }
+
+  // Show skeleton during SSR/hydration
+  if (!mounted) {
+    return <SkillsChartSkeleton groupCount={groupedSkills.size} />;
   }
 
   return (

@@ -12,6 +12,39 @@ type Testimonial = {
   src: string;
   companyLogo?: string;
 };
+
+// Loading skeleton to show during SSR
+function TestimonialsSkeleton() {
+  return (
+    <div className="mx-auto max-w-sm px-4 py-20 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12">
+      <div className="relative grid grid-cols-1 gap-20 md:grid-cols-2">
+        <div>
+          <div className="relative h-80 w-full">
+            <div className="absolute inset-0 rounded-3xl bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+          </div>
+        </div>
+        <div className="flex flex-col justify-between py-4">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="h-8 w-48 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
+            </div>
+            <div className="h-4 w-32 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
+            <div className="mt-8 space-y-2">
+              <div className="h-4 w-full bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
+              <div className="h-4 w-full bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
+              <div className="h-4 w-3/4 bg-neutral-200 dark:bg-neutral-800 rounded animate-pulse" />
+            </div>
+          </div>
+          <div className="flex gap-4 pt-12 md:pt-0">
+            <div className="h-7 w-7 rounded-full bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+            <div className="h-7 w-7 rounded-full bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export const AnimatedTestimonials = ({
   testimonials,
   autoplay = false,
@@ -20,6 +53,12 @@ export const AnimatedTestimonials = ({
   autoplay?: boolean;
 }) => {
   const [active, setActive] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  // Track mounted state to avoid hydration issues
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleNext = useCallback(() => {
     setActive((prev) => (prev + 1) % testimonials.length);
@@ -34,17 +73,22 @@ export const AnimatedTestimonials = ({
   };
 
   useEffect(() => {
-    if (autoplay) {
+    if (autoplay && mounted) {
       const interval = setInterval(handleNext, 5000);
       return () => clearInterval(interval);
     }
-  }, [autoplay, handleNext]);
+  }, [autoplay, handleNext, mounted]);
 
   const getRotation = (index: number) => {
     // Deterministic rotation based on index to avoid hydration mismatch
     const rotations = [-10, -5, 0, 5, 10, -8, 8, -3, 3, -7];
     return rotations[index % rotations.length];
   };
+
+  // Show skeleton during SSR to prevent layout shift
+  if (!mounted) {
+    return <TestimonialsSkeleton />;
+  }
 
   return (
     <div className="mx-auto max-w-sm px-4 py-20 font-sans antialiased md:max-w-4xl md:px-8 lg:px-12">
@@ -56,10 +100,10 @@ export const AnimatedTestimonials = ({
                 <motion.div
                   key={`${testimonial.name}-${index}`}
                   initial={{
-                    opacity: 0,
-                    scale: 0.9,
-                    z: -100,
-                    rotate: getRotation(index),
+                    opacity: isActive(index) ? 1 : 0,
+                    scale: isActive(index) ? 1 : 0.9,
+                    z: isActive(index) ? 0 : -100,
+                    rotate: isActive(index) ? 0 : getRotation(index),
                   }}
                   animate={{
                     opacity: isActive(index) ? 1 : 0.7,
@@ -89,6 +133,7 @@ export const AnimatedTestimonials = ({
                     width={500}
                     height={500}
                     draggable={false}
+                    priority={index === 0}
                     className="h-full w-full rounded-3xl object-cover object-center"
                   />
                 </motion.div>
@@ -100,8 +145,8 @@ export const AnimatedTestimonials = ({
           <motion.div
             key={active}
             initial={{
-              y: 20,
-              opacity: 0,
+              y: 0,
+              opacity: 1,
             }}
             animate={{
               y: 0,
@@ -133,31 +178,9 @@ export const AnimatedTestimonials = ({
             <p className="text-sm text-gray-500 dark:text-neutral-500">
               {testimonials[active].designation}
             </p>
-            <motion.p className="mt-8 text-lg text-gray-500 dark:text-neutral-300">
-              {testimonials[active].quote.split(" ").map((word, index) => (
-                <motion.span
-                  key={`${active}-word-${index}-${word}`}
-                  initial={{
-                    filter: "blur(10px)",
-                    opacity: 0,
-                    y: 5,
-                  }}
-                  animate={{
-                    filter: "blur(0px)",
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  transition={{
-                    duration: 0.2,
-                    ease: "easeInOut",
-                    delay: 0.02 * index,
-                  }}
-                  className="inline-block"
-                >
-                  {word}&nbsp;
-                </motion.span>
-              ))}
-            </motion.p>
+            <p className="mt-8 text-lg text-gray-500 dark:text-neutral-300">
+              {testimonials[active].quote}
+            </p>
           </motion.div>
           <div className="flex gap-4 pt-12 md:pt-0">
             <button

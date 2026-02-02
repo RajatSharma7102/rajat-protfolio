@@ -2,11 +2,17 @@
 
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { MessageSquare, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useSidebar } from "./ui/sidebar";
 
 function SidebarToggle() {
   const { toggleSidebar, open, isMobile, openMobile } = useSidebar();
-  const { isSignedIn } = useUser();
+  const { isSignedIn, isLoaded } = useUser();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isSidebarOpen = isMobile ? openMobile : open;
 
@@ -20,6 +26,48 @@ function SidebarToggle() {
     transition-all duration-500 
     hover:scale-110 hover:rotate-12 
     flex items-center justify-center`;
+
+  // Show button immediately, but non-interactive during hydration
+  const renderButton = () => {
+    // During SSR/hydration, show a simple button
+    if (!mounted || !isLoaded) {
+      return (
+        <button
+          type="button"
+          className={buttonStyles}
+          aria-label="Chat with Me"
+        >
+          <MessageSquare className="h-7 w-7 text-white" />
+        </button>
+      );
+    }
+
+    // After hydration, show the full interactive button
+    if (isSignedIn) {
+      return (
+        <button
+          type="button"
+          onClick={toggleSidebar}
+          className={buttonStyles}
+          aria-label="Chat with Me"
+        >
+          <MessageSquare className="h-7 w-7 text-white transition-transform group-hover:scale-110" />
+        </button>
+      );
+    }
+
+    return (
+      <SignInButton mode="modal">
+        <button
+          type="button"
+          className={buttonStyles}
+          aria-label="Sign in to chat with Me"
+        >
+          <MessageSquare className="h-7 w-7 text-white transition-transform group-hover:scale-110" />
+        </button>
+      </SignInButton>
+    );
+  };
 
   return (
     <div className="fixed bottom-6 right-6 z-50 group">
@@ -41,26 +89,7 @@ function SidebarToggle() {
         <div className="absolute -bottom-1 right-6 w-2 h-2 rotate-45 bg-white/90 dark:bg-black/90 border-r border-b border-white/40 dark:border-white/20" />
       </div>
 
-      {isSignedIn ? (
-        <button
-          type="button"
-          onClick={toggleSidebar}
-          className={buttonStyles}
-          aria-label="Chat with Me"
-        >
-          <MessageSquare className="h-7 w-7 text-white transition-transform group-hover:scale-110" />
-        </button>
-      ) : (
-        <SignInButton mode="modal">
-          <button
-            type="button"
-            className={buttonStyles}
-            aria-label="Sign in to chat with Me"
-          >
-            <MessageSquare className="h-7 w-7 text-white transition-transform group-hover:scale-110" />
-          </button>
-        </SignInButton>
-      )}
+      {renderButton()}
     </div>
   );
 }

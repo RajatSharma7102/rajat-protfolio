@@ -3,7 +3,7 @@
 import { useClerk, useUser } from "@clerk/nextjs";
 import { IconLogout, IconMenu2, IconX } from "@tabler/icons-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DynamicIcon } from "./DynamicIcon";
 import { useSidebar } from "./ui/sidebar";
 
@@ -39,23 +39,32 @@ const getVisibleLinks = (links: DockLink[], maxItems: number) => {
 };
 
 export function FloatingDockClient({ navItems }: FloatingDockClientProps) {
-  const { isSignedIn } = useUser();
+  const { isSignedIn, isLoaded } = useUser();
   const { signOut } = useClerk();
   const { open, isMobile, openMobile } = useSidebar();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [desktopMoreMenuOpen, setDesktopMoreMenuOpen] = useState(false);
   const [mobileMoreMenuOpen, setMobileMoreMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isSidebarOpen = isMobile ? openMobile : open;
 
+  // Base navigation links (always available)
+  const baseLinks: DockLink[] = navItems.map((item) => ({
+    title: item.title || "",
+    href: item.href || "#",
+    icon: <DynamicIcon iconName={item.icon || "IconHome"} />,
+    isExternal: item.isExternal,
+  }));
+
+  // Add sign out only after mounted and user is signed in
   const links: DockLink[] = [
-    ...navItems.map((item) => ({
-      title: item.title || "",
-      href: item.href || "#",
-      icon: <DynamicIcon iconName={item.icon || "IconHome"} />,
-      isExternal: item.isExternal,
-    })),
-    ...(isSignedIn && !isSidebarOpen
+    ...baseLinks,
+    ...(mounted && isLoaded && isSignedIn && !isSidebarOpen
       ? [
           {
             title: "Sign Out",

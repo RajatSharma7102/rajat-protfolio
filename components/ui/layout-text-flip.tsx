@@ -15,14 +15,37 @@ export const LayoutTextFlip = ({
   className?: string;
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % words.length);
     }, duration);
 
     return () => clearInterval(interval);
-  }, [duration, words.length]);
+  }, [duration, words.length, mounted]);
+
+  // Show static version during SSR to prevent invisible content
+  if (!mounted) {
+    return (
+      <span
+        className={cn("inline-flex flex-wrap items-center gap-2", className)}
+      >
+        <span className="inline-block">{text}</span>
+        <span className="relative inline-block overflow-hidden rounded-lg border border-primary/20 bg-primary/10 px-3 py-1 backdrop-blur-sm">
+          <span className="inline-block whitespace-nowrap font-semibold text-primary">
+            {words[0]}
+          </span>
+        </span>
+      </span>
+    );
+  }
 
   return (
     <span className={cn("inline-flex flex-wrap items-center gap-2", className)}>
@@ -37,7 +60,7 @@ export const LayoutTextFlip = ({
         <AnimatePresence mode="popLayout">
           <motion.span
             key={currentIndex}
-            initial={{ y: -40, filter: "blur(10px)", opacity: 0 }}
+            initial={{ y: 0, filter: "blur(0px)", opacity: 1 }}
             animate={{
               y: 0,
               filter: "blur(0px)",
