@@ -1,6 +1,21 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-export default clerkMiddleware();
+// Define studio route
+const isStudioRoute = createRouteMatcher(["/studio(.*)"]);
+
+export default clerkMiddleware(async (_auth, req) => {
+  // Check if trying to access studio route
+  if (isStudioRoute(req)) {
+    // In production, completely block access to studio (return 404)
+    if (process.env.NODE_ENV === "production") {
+      return new NextResponse("Not Found", { status: 404 });
+    }
+    // In development, allow access
+  }
+
+  return NextResponse.next();
+});
 
 export const config = {
   matcher: [
