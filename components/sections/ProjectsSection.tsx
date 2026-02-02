@@ -41,7 +41,7 @@ export async function ProjectsSection() {
                 className="@container/card group bg-card border rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300"
               >
                 {/* Project Image */}
-                {project.coverImage && (
+                {project.coverImage?.asset && (
                   <div className="relative aspect-video overflow-hidden bg-muted">
                     <Image
                       src={urlFor(project.coverImage)
